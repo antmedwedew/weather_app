@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/api/weather_api.dart';
 import 'package:weather_app/models/weather_model.dart';
 import 'package:weather_app/screens/city_screen.dart';
+import 'package:weather_app/widgets/bottom_list_view.dart';
+import 'package:weather_app/widgets/city_view.dart';
+import 'package:weather_app/widgets/detail_view.dart';
+import 'package:weather_app/widgets/temp_view.dart';
 
 class HomeScreen extends StatefulWidget {
   final Weather? locationWeather;
@@ -68,7 +72,27 @@ class _MyHomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: null,
+      body: FutureBuilder<Weather>(
+        future: weatherObject,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+              children: <Widget>[
+                const SizedBox(height: 50),
+                CityView(snapshot: snapshot),
+                const SizedBox(height: 30),
+                TempView(snapshot: snapshot),
+                const SizedBox(height: 30),
+                DetailView(snapshot: snapshot),
+                const SizedBox(height: 50),
+                BottomListView(snapshot: snapshot),
+              ],
+            );
+          } else {
+            return const Center(child: Text('City not found'));
+          }
+        },
+      ),
     );
   }
 }
